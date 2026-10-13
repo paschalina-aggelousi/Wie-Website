@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+<g fill="none" stroke="#772583" stroke-opacity=".16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<polyline points="20,60 80,60 110,90 110,140"/>
+<circle cx="20" cy="60" r="5"/>
+<circle cx="110" cy="140" r="5"/>
+<polyline points="110,90 170,90"/>
+<rect x="170" y="76" width="28" height="28" rx="3"/>
+<path d="M178,76v-8M190,76v-8M178,104v8M190,104v8M170,84h-8M170,96h-8M198,84h8M198,96h8"/>
+<polyline points="240,50 222,66 240,82"/>
+<line x1="262" y1="44" x2="252" y2="88"/>
+<polyline points="274,50 292,66 274,82"/>
+<circle cx="60" cy="250" r="9"/>
+<path d="M42,288a18,18 0 0 1 36,0"/>
+<circle cx="110" cy="230" r="11"/>
+<path d="M88,274a22,22 0 0 1 44,0"/>
+<circle cx="160" cy="250" r="9"/>
+<path d="M142,288a18,18 0 0 1 36,0"/>
+<path d="M68,236Q110,200 152,236" stroke-dasharray="3 6"/>
+<rect x="232" y="214" width="60" height="38" rx="3"/>
+<path d="M222,262H302l-7,-10H229z"/>
+<polyline points="246,228 256,236 246,244"/>
+<line x1="262" y1="246" x2="276" y2="246"/>
+<circle cx="300" cy="130" r="6"/>
+<circle cx="332" cy="176" r="6"/>
+<circle cx="280" cy="182" r="6"/>
+<circle cx="244" cy="130" r="4"/>
+<polyline points="300,130 332,176 280,182 300,130"/>
+<line x1="244" y1="130" x2="300" y2="130"/>
+</g>
+<text x="190" y="170" font-family="Consolas,Menlo,monospace" font-size="15" fill="#772583" fill-opacity=".16">01101 1001</text>
+<text x="30" y="188" font-family="Consolas,Menlo,monospace" font-size="15" fill="#772583" fill-opacity=".16">{ } ;</text>
+</svg>

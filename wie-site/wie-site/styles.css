@@ -1,0 +1,772 @@
+/* ==========================================================================
+   IEEE WIE – University of Macedonia
+   Stylesheet
+
+   Contents
+     1. Design tokens (colors) & base styles
+     2. Layout helpers & buttons
+     3. Header (logos + group name)
+     4. Hero
+     5. Sections (shared) & cards
+     6. Events
+     7. News
+     8. About us
+     9. Join us (form)
+    10. FAQs
+    11. Footer
+    12. Mobile (max-width: 760px)
+    13. Reduced motion
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. DESIGN TOKENS & BASE STYLES
+   Brand colors come from the IEEE WIE identity guidelines.
+   ========================================================================== */
+
+:root {
+  --purple: #772583;   /* primary */
+  --blue:   #00629B;   /* accent */
+  --green:  #78BE20;   /* accent */
+  --gray:   #75787B;   /* secondary text */
+  --ink:    #2b2b2e;   /* body text */
+  --tint:   #F1E9F3;   /* light purple background */
+  --line:   #E3D6E6;   /* borders & dividers */
+  --bg:     #fff;
+}
+
+:root {
+  color-scheme: light;   /* the logo is only allowed on light backgrounds */
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);       /* phone notches */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px;   /* space kept above an anchor when scrolling to it */
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.6 "Open Sans", Calibri, Arial, sans-serif;
+}
+
+a {
+  color: var(--blue);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 300;
+  color: var(--purple);
+  line-height: 1.15;
+  margin: 0;
+}
+
+h2 {
+  font-size: clamp(30px, 5vw, 42px);
+  margin-bottom: 28px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Elements with the "hidden" attribute stay hidden (used by the events tabs) */
+[hidden] {
+  display: none !important;
+}
+
+
+/* ==========================================================================
+   2. LAYOUT HELPERS & BUTTONS
+   ========================================================================== */
+
+/* Centered content column used by every section */
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Default button: green, pill-shaped */
+.btn {
+  display: inline-block;
+  padding: 14px 26px;
+  text-decoration: none;
+  background: var(--green);
+  color: #1c2b06;
+  border: 0;
+  font: 700 16px "Open Sans", sans-serif;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.btn:hover {
+  background: #8fd12e;
+}
+
+/* Variant: white button (e.g. "See our events") */
+.btn.ghost {
+  background: #fff;
+  color: var(--purple);
+  margin-left: 10px;
+}
+
+/* Variant: blue button (e.g. "Join us") */
+.btn.blue {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn.blue:hover {
+  background: #0a77b8;
+}
+
+
+/* ==========================================================================
+   3. HEADER (logos + group name)
+   The header sits inside the hero, so it shares the hero's gradient.
+   ========================================================================== */
+
+.site-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 20px;
+}
+
+/* "multiply" makes the white background of the logo images transparent */
+.site-header img {
+  mix-blend-mode: multiply;
+}
+
+.site-header .logo-wie {
+  width: 100px;
+  height: 100px;
+}
+
+.site-header .logo-uom {
+  width: 100px;
+  height: 100px;
+  margin-left: auto;   /* pushes the university logo to the right edge */
+}
+
+.site-header .brand-name {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25;
+  color: var(--purple);
+}
+
+.site-header .brand-name span {
+  display: block;
+  font-weight: 400;
+  color: var(--gray);
+  font-size: 16px;
+}
+
+
+/* ==========================================================================
+   4. HERO
+   Gradient background + faint circuit pattern on the left-to-right fade.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+  padding: 0 0 88px;
+  background: linear-gradient(
+    100deg,
+    #fff 0%,
+    #fff 24%,
+    #EFE3F3 52%,
+    #D9D2EE 76%,
+    #C9E3F2 100%
+  );
+  color: var(--ink);
+}
+
+/* Blue accent bar at the bottom-right corner */
+.hero::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 520px);
+  height: 14px;
+  background: var(--blue);
+}
+
+/* Faint circuit pattern, fading in from the left */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/pattern-hero.svg") 0 0 / 360px 360px;
+  -webkit-mask-image: linear-gradient(100deg, transparent 18%, #000 62%);
+  mask-image: linear-gradient(100deg, transparent 18%, #000 62%);
+  pointer-events: none;
+}
+
+/* Keeps the content above the ::before pattern */
+.hero .container {
+  position: relative;
+}
+
+/* Two columns: text on the left, illustration on the right */
+.hero > .container {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.hero h1 {
+  color: var(--purple);
+}
+
+.hero p {
+  max-width: 46ch;
+  font-size: 19px;
+  margin: 22px 0 32px;
+  color: #3d3d42;
+}
+
+.hero .btn.ghost {
+  box-shadow: inset 0 0 0 2px var(--purple);   /* purple outline */
+}
+
+/* Decorative SVG illustration */
+.hero-art {
+  width: 100%;
+  height: auto;
+}
+
+
+/* ==========================================================================
+   5. SECTIONS (shared) & CARDS
+   ========================================================================== */
+
+section {
+  padding: 72px 0;
+}
+
+/* Tinted sections (News, Join us): light purple + faint circuit pattern */
+section.section-tinted {
+  background: url("assets/pattern-section.svg") 0 0 / 360px 360px, var(--tint);
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-tinted .card {
+  border-color: transparent;
+}
+
+.card p {
+  margin: 0;
+  color: #4a4a4f;
+  font-size: 15px;
+}
+
+.card-date {
+  font-weight: 700;
+  color: var(--blue);
+  font-size: 15px;
+}
+
+.card .card-link {
+  margin-top: auto;   /* keeps the link at the bottom of the card */
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Placeholder image at the top of a card (replace with a real photo later).
+   Purple gradient with a blue diagonal stripe and a cut bottom-left corner. */
+.placeholder-img {
+  height: 130px;
+  margin: -22px -22px 6px;
+  background:
+    linear-gradient(135deg, transparent 0 62%, var(--blue) 62% 74%, transparent 74%),
+    linear-gradient(135deg, var(--purple), #a45bb0);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+}
+
+.section-note {
+  font-size: 14px;
+  color: var(--gray);
+  margin-top: 18px;
+}
+
+
+/* ==========================================================================
+   6. EVENTS
+   Tabs switch between the "upcoming" and "past" lists (see script.js).
+   ========================================================================== */
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.tabs button {
+  border-radius: 999px;
+  font: 600 15px "Open Sans", sans-serif;
+  padding: 10px 20px;
+  border: 2px solid var(--purple);
+  background: #fff;
+  color: var(--purple);
+  cursor: pointer;
+}
+
+/* Active tab */
+.tabs button[aria-selected="true"] {
+  background: var(--purple);
+  color: #fff;
+}
+
+
+/* ==========================================================================
+   7. NEWS
+   Uses only the shared .grid and .card styles (section 5).
+   ========================================================================== */
+
+
+/* ==========================================================================
+   8. ABOUT US
+   ========================================================================== */
+
+/* Block titles inside About us: What We Do / Why Join Us? / Our Vision */
+.about-block {
+  margin-top: 44px;
+}
+
+.about-block:first-of-type {
+  margin-top: 0;
+}
+
+.about-heading {
+  font-size: clamp(24px, 3.5vw, 30px);
+  margin-bottom: 12px;
+}
+
+/* Heading with an icon on its left (used by "Our Vision") */
+.about-heading-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.about-heading-icon svg {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  fill: currentColor;   /* same purple as the heading text */
+}
+
+.about-intro {
+  max-width: 70ch;
+  margin: 0 0 24px;
+}
+
+/* "What We Do": four illustrated cards with a purple top edge */
+.feature-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.feature {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--purple);
+  border-bottom: 2px solid var(--purple);
+  border-left: 2px solid var(--purple);
+  border-right: 2px solid var(--purple);
+  padding: 22px;
+}
+
+/* Illustration at the top of each card.
+   The images are cropped to their content; object-fit keeps their proportions. */
+.feature-icon {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--purple);
+  margin: 16px 0 8px;
+}
+
+.feature p {
+  margin: 0;
+  font-size: 15px;
+  color: #4a4a4f;
+}
+
+/* "Why Join Us?": light purple panel with a cut bottom-right corner */
+.why-panel {
+  background: var(--tint);
+  padding: 32px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), calc(100% - 28px) 100%, 0 100%);
+}
+
+.perks {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.perk {
+  border-top: 2px solid var(--blue);
+  border-bottom: 2px solid var(--blue);
+  border-left: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+.perk-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--purple);
+  margin: 0 0 6px;
+}
+
+.perk p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* "Our Vision": large statement with a purple bar on the left */
+.vision {
+  max-width: 60ch;
+  margin: 0;
+  padding: 6px 0 6px 24px;
+  border-left: 6px solid var(--purple);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--purple);
+}
+
+/* Team members */
+.team {
+  margin-top: 44px;
+}
+
+.team-title {
+  margin-bottom: 18px;
+}
+
+.team-grid {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.person {
+  text-align: left;
+}
+
+/* Photo placeholder with a cut bottom-right corner */
+.person .avatar {
+  aspect-ratio: 1;
+  background: var(--line);
+  margin-bottom: 10px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+}
+
+.person b {
+  display: block;
+}
+
+.person span {
+  color: var(--gray);
+  font-size: 15px;
+}
+
+
+/* ==========================================================================
+   9. JOIN US (benefits list + form)
+   ========================================================================== */
+
+.join-grid {
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.benefits-list {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.benefits-list li {
+  margin-bottom: 8px;
+}
+
+form {
+  background: var(--tint);
+  padding: 28px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 14px;
+}
+
+input {
+  border-radius: 8px;
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  font: 400 16px "Open Sans", sans-serif;
+  border: 1px solid var(--gray);
+  background: #fff;
+}
+
+/* Message shown after the form is submitted */
+.form-success {
+  color: #2c6b00;
+  font-weight: 600;
+  margin: 14px 0 0;
+}
+
+
+/* ==========================================================================
+   10. FAQs
+   Accordion built on <details>/<summary>; no JavaScript needed.
+   ========================================================================== */
+
+details {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+  max-width: 780px;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--purple);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+summary::-webkit-details-marker {
+  display: none;   /* hides the default arrow in Safari */
+}
+
+/* "+" when closed, "–" when open */
+summary::after {
+  content: "+";
+  font-size: 26px;
+  line-height: 1;
+  color: var(--blue);
+}
+
+details[open] summary::after {
+  content: "–";
+}
+
+details p {
+  margin: 12px 0 0;
+  max-width: 62ch;
+}
+
+
+/* ==========================================================================
+   11. FOOTER
+   ========================================================================== */
+
+footer {
+  background: var(--purple);
+  color: #fff;
+  padding: 44px 0;
+  
+}
+
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Tagline in the Bitcount Ink font (loaded in the <head> of index.html) */
+.footer-tagline {
+  width: 100%;
+  margin: 0;
+  font-family: "Bitcount Ink", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "slnt" 0,
+    "CRSV" 0.5,
+    "ELSH" 0,
+    "ELXP" 0,
+    "SZP1" 0,
+    "SZP2" 0,
+    "XPN1" 0,
+    "XPN2" 0,
+    "YPN1" 0,
+    "YPN2" 0;
+  font-size: clamp(30px, 6vw, 52px);
+  line-height: 1.1;
+  color: #fff;
+}
+
+.footer-logos {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.footer-logos .logo-wie {
+  width: 110px;
+}
+
+/* The university logo is purple, so it sits on a small white plate */
+.footer-logos .logo-uom {
+  width: 76px;
+  padding: 6px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+/* Social media icon buttons: white with a purple icon */
+.social-links {
+  display: flex;
+  gap: 12px;
+}
+
+.social-links a {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: var(--purple);
+}
+
+.social-links a:hover {
+  background: var(--tint);
+}
+
+.social-links svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.footer-note {
+  width: 100%;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.footer-note a {
+  color: #fff;
+}
+
+
+/* ==========================================================================
+   12. MOBILE (max-width: 760px)
+   Kept at the end of the file so these rules override the ones above.
+   ========================================================================== */
+
+@media (max-width: 760px) {
+  /* Two-column layouts become one column */
+  .join-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero > .container {
+    grid-template-columns: 1fr;
+  }
+
+  /* Header: smaller name, university logo hidden */
+  .site-header .brand-name {
+    font-size: 17px;
+  }
+
+  .site-header .logo-uom {
+    display: none;
+  }
+
+  /* Hero: illustration hidden, less padding */
+  .hero-art {
+    display: none;
+  }
+
+  .hero {
+    padding: 0 0 64px;
+  }
+
+  section {
+    padding: 52px 0;
+  }
+
+  .btn.ghost {
+    margin: 12px 0 0;
+  }
+}
+
+
+/* ==========================================================================
+   13. REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
