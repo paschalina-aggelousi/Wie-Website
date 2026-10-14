@@ -44,7 +44,7 @@
 
 *,
 *::before,
-*::after {
+*::after{
   box-sizing: inherit;
 }
 
@@ -205,16 +205,6 @@ h3 {
   color: var(--ink);
 }
 
-/* Blue accent bar at the bottom-right corner */
-.hero::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: min(46%, 520px);
-  height: 14px;
-  background: var(--blue);
-}
 
 /* Faint circuit pattern, fading in from the left */
 .hero::before {
@@ -243,12 +233,16 @@ h3 {
 
 .hero h1 {
   color: var(--purple);
+  font-size: clamp(30px, 5vw, 42px);
+  margin-bottom: 28px;
 }
 
-.hero p {
+/* Description text: right column on desktop */
+.hero .hero-text {
   max-width: 46ch;
   font-size: 19px;
-  margin: 22px 0 32px;
+  margin: 0;
+  justify-self: end;
   color: #3d3d42;
 }
 
@@ -256,10 +250,12 @@ h3 {
   box-shadow: inset 0 0 0 2px var(--purple);   /* purple outline */
 }
 
-/* Decorative SVG illustration */
-.hero-art {
-  width: 100%;
-  height: auto;
+/* Tangerine font for the main hero title*/
+
+.tangerine-bold {
+  font-family: "Tangerine", cursive;
+  font-weight: 700;
+  font-style: normal;
 }
 
 
@@ -545,34 +541,29 @@ section.section-tinted {
   margin-bottom: 8px;
 }
 
-form {
-  background: var(--tint);
-  padding: 28px;
+
+
+/* Google Form embed: fluid card, works on desktop and mobile */
+.join-grid > * {
+  min-width: 0;            /* lets grid columns shrink instead of overflowing */
 }
 
-label {
-  display: block;
-  font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 14px;
+.google-form-container {
+  width: 100%;
+  max-width: 640px;
+  justify-self: end;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(119, 37, 131, 0.10);
+  overflow: hidden;
 }
 
-input {
-  border-radius: 8px;
+.google-form-container iframe {
   display: block;
   width: 100%;
-  margin-top: 6px;
-  padding: 12px;
-  font: 400 16px "Open Sans", sans-serif;
-  border: 1px solid var(--gray);
-  background: #fff;
-}
-
-/* Message shown after the form is submitted */
-.form-success {
-  color: #2c6b00;
-  font-weight: 600;
-  margin: 14px 0 0;
+  height: clamp(480px, 70vh, 620px);   /* the rest of the form scrolls inside */
+  border: 0;
 }
 
 
@@ -658,8 +649,8 @@ footer {
     "XPN2" 0,
     "YPN1" 0,
     "YPN2" 0;
-  font-size: clamp(30px, 6vw, 52px);
-  line-height: 1.1;
+  font-size: clamp(26px, 6vw, 46px);
+  line-height: 1.2;
   color: #fff;
 }
 
@@ -717,6 +708,13 @@ footer {
   color: #fff;
 }
 
+.copyright{
+  width: 100%;
+  margin:10px 0 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
 
 /* ==========================================================================
    12. MOBILE (max-width: 760px)
@@ -724,6 +722,18 @@ footer {
    ========================================================================== */
 
 @media (max-width: 760px) {
+  /* Form: full width; fixed height, the rest scrolls inside the form */
+  .google-form-container {
+    max-width: none;
+    justify-self: stretch;
+    border-radius: 8px;
+  }
+
+  .google-form-container iframe {
+    height: 70vh;
+    min-height: 440px;
+    max-height: 560px;
+  }
   /* Two-column layouts become one column */
   .join-grid {
     grid-template-columns: 1fr;
@@ -731,15 +741,50 @@ footer {
 
   .hero > .container {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
 
-  /* Header: smaller name, university logo hidden */
-  .site-header .brand-name {
+  /* Mobile order: title, description, buttons.
+     The left column dissolves so its children can be reordered with the text. */
+  .hero-main {
+    display: contents;
+  }
+
+  .hero-main h2 {
+    order: 1;
+  }
+
+  .hero .hero-text {
+    order: 2;
+    justify-self: start;
+    max-width: none;
     font-size: 17px;
   }
 
+  .hero-buttons {
+    order: 3;
+  }
+
+  /* Header: smaller logos and name so all three fit in one row */
+  .site-header {
+    gap: 10px;
+    padding: 10px 14px;
+  }
+
+  .site-header .logo-wie,
   .site-header .logo-uom {
-    display: none;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+  }
+
+  .site-header .brand-name {
+    font-size: 15px;
+    min-width: 0;
+  }
+
+  .site-header .brand-name span {
+    font-size: 12px;
   }
 
   /* Hero: illustration hidden, less padding */

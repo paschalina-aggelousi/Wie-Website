@@ -3,7 +3,6 @@
    Scripts
 
    1. Events tabs (Upcoming / Past)
-   2. Join us form (opens an email)
    ========================================================================== */
 
 
@@ -30,37 +29,4 @@ tabButtons.forEach(function (clickedButton) {
     upcomingList.hidden = clickedButton.dataset.tab !== 'events-upcoming';
     pastList.hidden = clickedButton.dataset.tab !== 'events-past';
   });
-});
-
-
-/* --------------------------------------------------------------------------
-   2. JOIN US FORM
-   The site has no server, so the form does not send data anywhere.
-   On submit it opens the visitor's email app with a pre-filled message
-   addressed to the group, and shows a confirmation text.
-   -------------------------------------------------------------------------- */
-
-// Settings: change these to update the email that is opened
-const CONTACT_EMAIL = 'wie@example.org';
-const EMAIL_SUBJECT = 'Membership application';
-
-const joinForm = document.getElementById('join-form');
-const joinSuccessMessage = document.getElementById('join-success');
-
-joinForm.addEventListener('submit', function (event) {
-  event.preventDefault();   // stops the page from reloading
-
-  // Body of the email, built from what the visitor typed
-  const emailBody =
-    'Full name: ' + joinForm.fullName.value + '\n' +
-    'Email: ' + joinForm.email.value + '\n' +
-    'Department/year: ' + joinForm.department.value;
-
-  joinSuccessMessage.hidden = false;
-
-  // Opens the email app
-  location.href =
-    'mailto:' + CONTACT_EMAIL +
-    '?subject=' + encodeURIComponent(EMAIL_SUBJECT) +
-    '&body=' + encodeURIComponent(emailBody);
 });

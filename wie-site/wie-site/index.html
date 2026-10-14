@@ -41,38 +41,18 @@
 
     <div class="container">
 
-      <!-- Left column: text and buttons -->
-      <div>
-        <h2><strong>IEEE UoM Women In Engineering</strong></h2>
-
-        <p>
-          Dedicated to empowering and advancing women in technology, the IEEE UoM Women In Engineering (WIE) Student Branch Affinity Group at the University of Macedonia, founded in 2026, is a vibrant community connected with the global IEEE WIE network. Our mission is centered on uplifting women in electrical engineering, computer science and related STEM fields by creating strong opportunities for professional growth, technical excellence and innovation.
-        </p>
+      <!-- Left column: title and buttons -->
+      <div class="hero-main">
+        <h1 class="tangerine-bold">IEEE UoM Women In Engineering</h1>
 
         <!-- Keep both buttons on one line with no space between them: a gap would shift the layout -->
-        <a class="btn blue" href="#join">Join us</a><a class="btn ghost" href="#events">See our events</a>
+        <div class="hero-buttons"><a class="btn blue" href="#join">Join us</a> <a class="btn ghost" href="#events">See our events</a></div>
       </div>
 
-      <!-- Right column: decorative illustration (hidden on mobile) -->
-      <svg class="hero-art" viewBox="0 0 400 360" aria-hidden="true">
-        <!-- Background panels -->
-        <polygon points="60,30 340,30 340,100 310,130 60,130" fill="#772583" fill-opacity=".12"/>
-        <polygon points="110,150 400,150 400,250 370,280 110,280" fill="#00629B" fill-opacity=".2"/>
-        <polygon points="250,300 380,300 380,316 366,330 250,330" fill="#78BE20"/>
-
-        <!-- Circuit lines -->
-        <g fill="none" stroke="#772583" stroke-opacity=".85" stroke-width="3">
-          <polyline points="40,340 40,260 90,210 200,210 240,170 360,170"/>
-          <polyline points="140,340 140,310 170,280" stroke-opacity=".4"/>
-        </g>
-
-        <!-- Circuit nodes -->
-        <g fill="#772583">
-          <circle cx="40" cy="340" r="7"/>
-          <circle cx="360" cy="170" r="7"/>
-          <circle cx="200" cy="210" r="6" fill-opacity=".7"/>
-        </g>
-      </svg>
+      <!-- Right column: description (on mobile the order is title, text, buttons) -->
+      <p class="hero-text">
+        Dedicated to empowering and advancing women in technology, the IEEE UoM Women In Engineering (WIE) Student Branch Affinity Group at the University of Macedonia, founded in 2026, is a vibrant community connected with the global IEEE WIE network. Our mission is centered on uplifting women in electrical engineering, computer science and related STEM fields by creating strong opportunities for professional growth, technical excellence and innovation.
+      </p>
 
     </div>
   </div>
@@ -278,8 +258,7 @@
 
   <!-- ======================================================================
        JOIN US
-       The form does not send data to a server: script.js opens an email
-       to the group's address instead.
+       
        ====================================================================== -->
   <section id="join" class="section-tinted">
     <div class="container join-grid">
@@ -287,33 +266,22 @@
       <!-- Benefits -->
       <div>
         <h2>Join us</h2>
-        <p>Membership is open to all students, regardless of gender or department. What you gain:</p>
+        <p>Join our community of students interested in technology, engineering, and STEM, regardless of gender or department. What you gain:</p>
         <ul class="benefits-list">
-          <li>Events, workshops and meetings with professionals</li>
-          <li>Mentoring and networking</li>
-          <li>Access to the global IEEE WIE network</li>
-          <li>Volunteering and leadership opportunities</li>
+          <li>Events, workshops and talks by professionals</li>
+          <li>Networking with students and professionals</li>
+          <li>Leadership and professional development</li>
+          <li>Opportunities to connect with the global IEEE WIE community</li>
         </ul>
       </div>
 
       <!-- Application form -->
-      <form id="join-form">
-        <label>Full name
-          <input name="fullName" required autocomplete="name">
-        </label>
-
-        <label>Email
-          <input name="email" type="email" required autocomplete="email">
-        </label>
-
-        <label>Department and year of study
-          <input name="department" required placeholder="e.g. Applied Informatics, 2nd year">
-        </label>
-
-        <button class="btn" type="submit">Submit application</button>
-
-        <p class="form-success" id="join-success" hidden>Done. Send the email that just opened to complete your application.</p>
-      </form>
+      <div class="google-form-container">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfFbf1asjqytDMwA3Irzkhea4-fGrnrYJ2a7aBQhg-yEwzszw/viewform?embedded=true&amphl=en"
+          title="IEEE WIE UoM – Join Us form"
+          loading="lazy">Loading…</iframe>
+      </div>
 
     </div>
   </section>
@@ -328,28 +296,34 @@
       <h2>FAQs</h2>
 
       <details>
-        <summary>Do I need to study engineering to take part?</summary>
-        <p>No. IEEE WIE is open to everyone interested in technology.</p>
+        <summary>How can I join the IEEE WIE team at the University of Macedonia?</summary>
+        <p>Fill out our Join Us form to express your interest in becoming part of our community!</p>
       </details>
 
       <details>
-        <summary>Does membership cost anything?</summary>
-        <p>Add the answer about the membership fee here, if there is one.</p>
+        <summary>Is IEEE WIE only for women?</summary>
+        <p>IEEE WIE welcomes individuals of all genders and backgrounds who share an interest in technology and engineering.</p>
+      </details>
+
+
+      <details>
+        <summary>Does IEEE WIE membership cost anything?</summary>
+        <p>IEEE WIE membership costs US$25 per year and is free to IEEE Student, Graduate Student, and Life Members.</p>
       </details>
 
       <details>
-        <summary>How much time does it take?</summary>
-        <p>Add here how often meetings take place and what commitment you ask for.</p>
+        <summary>How much time does it take to participate?</summary>
+        <p>Participation is flexible! You can choose how much time to dedicate based on your availability and interests.</p>
       </details>
 
       <details>
-        <summary>Can I become a volunteer?</summary>
-        <p>Add here how someone can take on a role in the team.</p>
+        <summary>Do I need experience in technology to participate?</summary>
+        <p>No! Everyone interested in technology, engineering, and STEM is welcome. You don't need previous experience, just curiosity and a willingness to learn.</p>
       </details>
 
       <details>
         <summary>How can I contact you?</summary>
-        <p>Send us an email or message us on social media (see the footer).</p>
+        <p>Feel free to email us or send us a message on social media.</p>
       </details>
     </div>
   </section>
@@ -387,6 +361,7 @@
     </div>
 
     <p class="footer-note">IEEE Women in Engineering is a sub-brand of IEEE. Visit <a href="https://wie.ieee.org">wie.ieee.org</a>.</p>
+    <p class="copyright">&copy; 2026 IEEE WIE - University of Macedonia </p>
 
   </div>
 </footer>
