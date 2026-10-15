@@ -183,6 +183,41 @@ h3 {
   font-size: 16px;
 }
 
+/* ==========================================================================
+   3b. NAVIGATION (under the logos)
+   No background of its own: the hero gradient shows through.
+   On desktop it is a row of links; on mobile see section 12.
+   ========================================================================== */
+
+
+.nav-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 28px;
+}
+
+.nav-menu a {
+  display: block;
+  padding: 14px 0;
+  color: var(--purple);
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+/* Blue underline on hover / keyboard focus */
+.nav-menu a:hover,
+.nav-menu a:focus-visible {
+  box-shadow: inset 0 -3px 0 var(--blue);
+}
+
+/* The menu button (three lines) only exists on mobile */
+.nav-toggle {
+  display: none;
+}
 
 /* ==========================================================================
    4. HERO
@@ -194,6 +229,10 @@ h3 {
   overflow: hidden;
   margin-top: 0;
   padding: 0 0 88px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;    /* fallback for older browsers */
+  min-height: 100svh;   /* exactly the visible screen height */
   background: linear-gradient(
     100deg,
     #fff 0%,
@@ -229,6 +268,9 @@ h3 {
   grid-template-columns: 1.1fr 0.9fr;
   gap: 32px;
   align-items: center;
+  width: 100%;              /* needed because .hero is now a flex column */
+  flex: 1;                  /* takes all the space left under the header */
+  align-content: center;    /* keeps the content vertically centered */
 }
 
 .hero h1 {
@@ -253,8 +295,8 @@ h3 {
 /* Tangerine font for the main hero title*/
 
 .tangerine-bold {
-  font-family: "Tangerine", cursive;
-  font-weight: 700;
+  font-family: "Purple Purse", serif;
+  font-weight: 500;
   font-style: normal;
 }
 
@@ -509,6 +551,11 @@ section.section-tinted {
   background: var(--line);
   margin-bottom: 10px;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+  width: 120px; /* Ρύθμισε το μέγεθος ανάλογα με το design σου */
+  height: 120px;
+  border-radius: 50%; /* Ή 8px/12px αν θέλεις τετράγωνο με στρογγυλεμένες γωνίες */
+  object-fit: cover; /* Εξασφαλίζει ότι η εικόνα γεμίζει το πλαίσιο χωρίς να παραμορφώνεται */
+  display: block;
 }
 
 .person b {
@@ -634,10 +681,10 @@ footer {
 .footer-tagline {
   width: 100%;
   margin: 0;
-  font-family: "Bitcount Ink", system-ui;
-  font-optical-sizing: auto;
-  font-weight: 500;
+  font-family: "Purple Purse", serif;
+  font-weight: 400;
   font-style: normal;
+  font-optical-sizing: auto;
   font-variation-settings:
     "slnt" 0,
     "CRSV" 0.5,
@@ -673,15 +720,25 @@ footer {
 }
 
 /* Social media icon buttons: white with a purple icon */
+/* Title above the social buttons */
+.footer-social-title {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Social media icon buttons: white circles with a purple icon */
 .social-links {
   display: flex;
-  gap: 12px;
+  gap: 40px;
 }
 
 .social-links a {
   width: 46px;
   height: 46px;
   display: grid;
+  border-radius: 20%;   /* fully round; use e.g. 14px for rounded squares */
   place-items: center;
   background: #fff;
   color: var(--purple);
@@ -803,6 +860,65 @@ footer {
   .btn.ghost {
     margin: 12px 0 0;
   }
+
+    /* Navigation: the links hide behind a button with three lines */
+  .nav-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 46px;
+    height: 46px;
+    margin: 8px 0;
+    padding: 0 10px;
+    background: #fff;
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .nav-toggle-bar {
+    display: block;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--purple);
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  /* While the menu is open, the three lines turn into an X */
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  /* Menu: hidden until the button adds the "is-open" class (see script.js) */
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    padding-bottom: 10px;
+  }
+
+  .nav-menu.is-open {
+    display: flex;
+  }
+
+  .nav-menu a {
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(119, 37, 131, 0.15);
+  }
+
+  .nav-menu a:hover,
+  .nav-menu a:focus-visible {
+    box-shadow: none;
+    color: var(--blue);
+  }
 }
 
 
@@ -813,5 +929,9 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+    .nav-toggle-bar {
+    transition: none;
   }
 }
