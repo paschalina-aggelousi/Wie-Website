@@ -242,6 +242,16 @@ h3 {
     #C9E3F2 100%
   );
   color: var(--ink);
+  animation: fade-in 1.5s ease-out;
+}
+
+@keyframes fade-in {
+  from { 
+    opacity: 0;
+    transform: translateY(20px); }
+  to   { 
+    opacity: 1;
+    transform: translateY(0); }
 }
 
 
@@ -543,6 +553,7 @@ section.section-tinted {
 
 .person {
   text-align: left;
+  color:var(--purple);
 }
 
 /* Photo placeholder with a cut bottom-right corner */
@@ -565,6 +576,35 @@ section.section-tinted {
 .person span {
   color: var(--gray);
   font-size: 15px;
+}
+
+.linkedin-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width: 22px;
+  height: 22px;
+  margin-top: 6px;
+  margin-bottom: 20px;
+  color:#fff;
+  background-color: #0a66c2;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s;
+
+}
+
+.linkedin-link:hover, .linkedin-link:focus-visible {
+  transform: translateY(-2px);
+  background-color: #004182;
+  color: #fff;
+}
+
+.linkedin-link svg {
+  display: block;
+  width:16px;
+  height:16px;
+  fill: currentColor;
 }
 
 
