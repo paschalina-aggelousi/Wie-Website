@@ -551,8 +551,8 @@ section.section-tinted {
   background: var(--line);
   margin-bottom: 10px;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
-  width: 120px; /* Ρύθμισε το μέγεθος ανάλογα με το design σου */
-  height: 120px;
+  width: 150px; /* Ρύθμισε το μέγεθος ανάλογα με το design σου */
+  height: 150px;
   border-radius: 50%; /* Ή 8px/12px αν θέλεις τετράγωνο με στρογγυλεμένες γωνίες */
   object-fit: cover; /* Εξασφαλίζει ότι η εικόνα γεμίζει το πλαίσιο χωρίς να παραμορφώνεται */
   display: block;
