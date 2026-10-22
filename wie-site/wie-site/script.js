@@ -57,3 +57,23 @@ navMenu.querySelectorAll('a').forEach(function (link) {
     setMenuOpen(false);
   });
 });
+
+
+(function () {
+  function showAlt(img) {
+    if (img.dataset.altShown) return;
+    img.dataset.altShown = "1";
+    var box = document.createElement("div");
+    box.className = "avatar avatar-fallback";
+    box.setAttribute("role", "img");
+    box.setAttribute("aria-label", img.alt);
+    var text = document.createElement("span");
+    text.textContent = img.alt;
+    box.appendChild(text);
+    img.replaceWith(box);
+  }
+  document.querySelectorAll("img.avatar").forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0) showAlt(img);
+    else img.addEventListener("error", function () { showAlt(img); });
+  });
+})();

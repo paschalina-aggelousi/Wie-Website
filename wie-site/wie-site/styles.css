@@ -547,6 +547,11 @@ section.section-tinted {
   margin-bottom: 18px;
 }
 
+.team-subtitle {
+  margin: 28px 0 16px;
+  color :var(--purple);
+}
+
 .team-grid {
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
@@ -567,6 +572,26 @@ section.section-tinted {
   border-radius: 50%; /* Ή 8px/12px αν θέλεις τετράγωνο με στρογγυλεμένες γωνίες */
   object-fit: cover; /* Εξασφαλίζει ότι η εικόνα γεμίζει το πλαίσιο χωρίς να παραμορφώνεται */
   display: block;
+
+}
+
+/* Alt κείμενο μέσα στο frame όταν η φωτογραφία λείπει */
+.person .avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 18px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.person .avatar-fallback span {
+  display: block;
+  color: var(--purple);
+  font-size: 13px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
 .person b {
@@ -757,6 +782,13 @@ footer {
   padding: 6px;
   background: #fff;
   border-radius: 8px;
+}
+
+.footer-logos .logo-ieee {
+  width: 150px;
+  padding: 6px;
+  border-radius: 8px;
+  height: auto;
 }
 
 /* Social media icon buttons: white with a purple icon */
