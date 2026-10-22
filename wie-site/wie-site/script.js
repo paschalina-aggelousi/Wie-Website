@@ -1,164 +1,279 @@
 /* ==========================================================================
    IEEE WIE – University of Macedonia
-   enhancements.js
-     1. Netflix-style carousels (arrows) for Events + News
-     2. Sub-team mind map (open/close + connector lines)
-   Loaded after script.js, which keeps handling the tabs and the mobile menu.
+   Scripts
+
+   1. Events tabs (Upcoming / Past)
    ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   0. "ALL ..." LINKS (All events, All news)
+   A link with data-expand="<id of a scroll row>" switches that row between
+   the scrolling row and a grid that shows every item at once (the
+   .is-expanded class, see styles.css). It is at the top of the file so that
+   it works on its own.
+   -------------------------------------------------------------------------- */
+
+document.querySelectorAll('.expand-link').forEach(function (link) {
+  const row = document.getElementById(link.dataset.expand);
+  if (!row) return;
+  const label = link.textContent;
+
+  link.addEventListener('click', function (event) {
+    event.preventDefault();
+    const isExpanded = row.classList.toggle('is-expanded');
+    link.setAttribute('aria-expanded', isExpanded);
+    link.textContent = isExpanded ? 'Show less' : label;
+  });
+});
+
+
+/* --------------------------------------------------------------------------
+   0b. "READ MORE" POP-UP (News)
+   Clicking "Read more" on a news card shows the whole article in a pop-up.
+   The pop-up shows the text inside the card's hidden .card-full block; if the
+   card has none, it shows all the paragraphs of the card. The pop-up is
+   created here, so nothing extra is needed in index.html.
+   Esc, the X button or a click outside the pop-up closes it.
+   -------------------------------------------------------------------------- */
+
 (function () {
-  'use strict';
+  const dialog = document.createElement('dialog');
+  dialog.className = 'article-dialog';
+  dialog.setAttribute('aria-labelledby', 'article-dialog-title');
+  dialog.innerHTML =
+    '<button class="article-close" type="button" aria-label="Close">&times;</button>' +
+    '<span class="card-date" id="article-dialog-date"></span>' +
+    '<h3 id="article-dialog-title"></h3>' +
+    '<div class="article-body" id="article-dialog-body"></div>';
+  document.body.appendChild(dialog);
 
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  dialog.querySelector('.article-close').addEventListener('click', function () { dialog.close(); });
+  dialog.addEventListener('click', function (event) {
+    if (event.target === dialog) dialog.close();   // click on the dark background
+  });
 
-  /* ------------------------------------------------------------------------
-     1. CAROUSELS
-     Every .scroll-row gets a wrapper with a "previous" and a "next" arrow.
-     ------------------------------------------------------------------------ */
-  var CHEVRON_LEFT  = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8"/></svg>';
-  var CHEVRON_RIGHT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>';
+  // One listener for every "Read more" link of the News section
+  document.addEventListener('click', function (event) {
+    const link = event.target.closest('#news .card-link');
+    if (!link) return;
+    const card = link.closest('.card');
+    event.preventDefault();
 
-  function makeButton(kind, label, icon) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'carousel-btn carousel-btn--' + kind;
-    b.setAttribute('aria-label', label);
-    b.innerHTML = icon;
-    return b;
+    const full = card.querySelector('.card-full');
+    const dateEl = card.querySelector('.card-date');
+    document.getElementById('article-dialog-title').textContent = card.querySelector('h3').textContent;
+    document.getElementById('article-dialog-date').textContent = dateEl ? dateEl.textContent : '';
+    document.getElementById('article-dialog-body').innerHTML = full
+      ? full.innerHTML
+      : Array.from(card.querySelectorAll(':scope > p')).map(function (p) {
+          return '<p>' + p.innerHTML + '</p>';
+        }).join('');
+
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+    dialog.scrollTop = 0;
+  });
+})();
+
+
+/* --------------------------------------------------------------------------
+   0c. EMAIL ICON MENU
+   A plain mailto: link does nothing for visitors without an email program.
+   Clicking the email icon (any link starting with mailto:) opens a small menu:
+   Gmail, Outlook, the visitor's email program, or copy the address. The address
+   is taken from the link's href, so it is never written out as text on the page.
+   -------------------------------------------------------------------------- */
+
+(function () {
+  const emailLinks = document.querySelectorAll('a[href^="mailto:"]');
+  if (!emailLinks.length) return;
+
+  const menu = document.createElement('div');
+  menu.className = 'email-menu';
+  menu.hidden = true;
+  document.body.appendChild(menu);
+
+  function closeMenu() { menu.hidden = true; }
+
+  function copyText(text, button) {
+    function done() {
+      button.textContent = 'Copied!';
+      setTimeout(closeMenu, 900);
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else {
+      fallback();
+    }
+    function fallback() {
+      const box = document.createElement('textarea');
+      box.value = text;
+      box.style.position = 'fixed';
+      box.style.opacity = '0';
+      document.body.appendChild(box);
+      box.select();
+      try { document.execCommand('copy'); done(); } catch (e) { button.textContent = 'Could not copy'; }
+      box.remove();
+    }
   }
 
-  function initCarousel(row) {
-    var wrap = document.createElement('div');
-    wrap.className = 'carousel';
-    row.parentNode.insertBefore(wrap, row);
+  function openMenu(link) {
+    const address = link.getAttribute('href').replace('mailto:', '').split('?')[0];
+    const to = encodeURIComponent(address);
 
-    var prev = makeButton('prev', 'Scroll back', CHEVRON_LEFT);
-    var next = makeButton('next', 'Scroll forward', CHEVRON_RIGHT);
-    wrap.appendChild(prev);
-    wrap.appendChild(row);
-    wrap.appendChild(next);
-
-    function update() {
-      var max = row.scrollWidth - row.clientWidth;
-      prev.hidden = row.scrollLeft <= 2;
-      next.hidden = row.scrollLeft >= max - 2;
-    }
-
-    function go(dir) {
-      row.scrollBy({
-        left: dir * Math.max(row.clientWidth * 0.85, 200),
-        behavior: reduceMotion ? 'auto' : 'smooth'
-      });
-    }
-
-    prev.addEventListener('click', function () { go(-1); });
-    next.addEventListener('click', function () { go(1); });
-    row.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
-
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(update).observe(row);
-    }
-
-    /* The Events tabs show/hide the rows with the "hidden" attribute:
-       hide the arrows together with the row and re-measure when it comes back. */
-    new MutationObserver(function () {
-      wrap.hidden = row.hidden;
-      if (!row.hidden) { row.scrollLeft = 0; update(); }
-    }).observe(row, { attributes: true, attributeFilter: ['hidden'] });
-
-    /* Cards added/removed later, or images/fonts finishing loading */
-    new MutationObserver(update).observe(row, { childList: true });
-    window.addEventListener('load', update);
-
-    wrap.hidden = row.hidden;
-    update();
-  }
-
-  Array.prototype.forEach.call(document.querySelectorAll('.scroll-row'), initCarousel);
-
-
-  /* ------------------------------------------------------------------------
-     2. SUB-TEAM MIND MAP
-     ------------------------------------------------------------------------ */
-  var map = document.getElementById('subteam-map');
-  if (!map) { return; }
-
-  var svg     = map.querySelector('.mindmap-lines');
-  var center  = map.querySelector('.mm-center');
-  var nodes   = Array.prototype.slice.call(map.querySelectorAll('.mm-node'));
-  var SVG_NS  = 'http://www.w3.org/2000/svg';
-  var mobileQuery = window.matchMedia('(max-width: 760px)');
-
-  function drawLines() {
-    var m = map.getBoundingClientRect();
-    var c = center.getBoundingClientRect();
-    var mobile = mobileQuery.matches;
-
-    while (svg.firstChild) { svg.removeChild(svg.firstChild); }
-
-    /* On mobile the lines share one vertical trunk: draw the lowest branch first,
-       so the trunk changes colour at each branch instead of showing only the last. */
-    (mobile ? nodes.slice().reverse() : nodes).forEach(function (node) {
-      var btn   = node.querySelector('.mm-toggle').getBoundingClientRect();
-      var nr    = node.getBoundingClientRect();
-      var color = getComputedStyle(node).getPropertyValue('--accent').trim() || '#772583';
-
-      /* The line always ends at the middle of the node's title bar,
-         so it stays put when the box grows downwards. */
-      var ex = nr.left - m.left;
-      var ey = btn.top - m.top + btn.height / 2;
-      var sx, sy, d;
-
-      if (mobile) {
-        sx = c.left - m.left + c.width / 2;
-        sy = c.bottom - m.top - 4;
-        d = 'M' + sx + ' ' + sy + ' C' + sx + ' ' + ey + ',' + sx + ' ' + ey + ',' + ex + ' ' + ey;
-      } else {
-        sx = c.right - m.left - 4;
-        sy = c.top - m.top + c.height / 2;
-        var dx = (ex - sx) * 0.55;
-        d = 'M' + sx + ' ' + sy + ' C' + (sx + dx) + ' ' + sy + ',' + (ex - dx) + ' ' + ey + ',' + ex + ' ' + ey;
-      }
-
-      var path = document.createElementNS(SVG_NS, 'path');
-      path.setAttribute('d', d);
-      path.setAttribute('stroke', color);
-      svg.appendChild(path);
-
-      var dot = document.createElementNS(SVG_NS, 'circle');
-      dot.setAttribute('cx', ex);
-      dot.setAttribute('cy', ey);
-      dot.setAttribute('r', 5);
-      dot.setAttribute('fill', color);
-      svg.appendChild(dot);
+    menu.innerHTML =
+      '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '" target="_blank" rel="noopener">Open in Gmail</a>' +
+      '<a href="https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '" target="_blank" rel="noopener">Open in Outlook</a>' +
+      '<a href="mailto:' + address + '">Open email app</a>' +
+      '<button type="button">Copy email address</button>';
+    menu.querySelector('button').addEventListener('click', function (event) {
+      copyText(address, event.currentTarget);
     });
+    menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+
+    // Show it above the icon, kept inside the screen
+    menu.hidden = false;
+    const rect = link.getBoundingClientRect();
+    const left = Math.min(Math.max(8, rect.left + window.scrollX + rect.width / 2 - menu.offsetWidth / 2),
+                          document.documentElement.clientWidth - menu.offsetWidth - 8);
+    menu.style.left = left + 'px';
+    menu.style.top = (rect.top + window.scrollY - menu.offsetHeight - 10) + 'px';
   }
 
-  /* Redraw on every frame while a box is growing/shrinking */
-  var rafId = null;
-  function animateLines(ms) {
-    var end = performance.now() + ms;
-    cancelAnimationFrame(rafId);
-    (function tick() {
-      drawLines();
-      if (performance.now() < end) { rafId = requestAnimationFrame(tick); }
-    })();
-  }
-
-  nodes.forEach(function (node) {
-    var btn = node.querySelector('.mm-toggle');
-    btn.addEventListener('click', function () {
-      var open = !node.classList.contains('is-open');
-      node.classList.toggle('is-open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      animateLines(reduceMotion ? 50 : 450);
+  emailLinks.forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (menu.hidden) openMenu(link); else closeMenu();
     });
   });
 
-  window.addEventListener('resize', drawLines);
-  if (mobileQuery.addEventListener) { mobileQuery.addEventListener('change', drawLines); }
-  if ('ResizeObserver' in window) { new ResizeObserver(drawLines).observe(map); }
-  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(drawLines); }
-  window.addEventListener('load', drawLines);
-  drawLines();
+  document.addEventListener('click', function (event) {
+    if (!menu.hidden && !menu.contains(event.target) && !event.target.closest('a[href^="mailto:"]')) closeMenu();
+  });
+  document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeMenu(); });
+  window.addEventListener('resize', closeMenu);
+})();
+
+
+/* --------------------------------------------------------------------------
+   1. EVENTS TABS
+   Each tab button has a data-tab attribute with the id of the list it shows
+   (see the Events section in index.html). Clicking a tab marks it as
+   selected and shows only its list.
+   -------------------------------------------------------------------------- */
+
+const tabButtons = document.querySelectorAll('.tabs button');
+const upcomingList = document.getElementById('events-upcoming');
+const pastList = document.getElementById('events-past');
+
+tabButtons.forEach(function (clickedButton) {
+  clickedButton.addEventListener('click', function () {
+
+    // Only the clicked tab is marked as selected (this also styles it, see styles.css)
+    tabButtons.forEach(function (button) {
+      button.setAttribute('aria-selected', button === clickedButton);
+    });
+
+    // Show the list of the clicked tab and hide the other one
+    upcomingList.hidden = clickedButton.dataset.tab !== 'events-upcoming';
+    pastList.hidden = clickedButton.dataset.tab !== 'events-past';
+  });
+});
+
+/* --------------------------------------------------------------------------
+   2. MOBILE MENU
+   On mobile the links are hidden. The three-line button adds or removes the
+   "is-open" class on the menu (see styles.css) and updates aria-expanded,
+   which also turns the three lines into an X.
+   -------------------------------------------------------------------------- */
+
+const navToggle = document.querySelector('.nav-toggle');
+const navMenu = document.getElementById('nav-menu');
+
+function setMenuOpen(isOpen) {
+  navMenu.classList.toggle('is-open', isOpen);
+  navToggle.setAttribute('aria-expanded', isOpen);
+  navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+}
+
+navToggle.addEventListener('click', function () {
+  setMenuOpen(!navMenu.classList.contains('is-open'));
+});
+
+// Close the menu after the visitor picks a link
+navMenu.querySelectorAll('a').forEach(function (link) {
+  link.addEventListener('click', function () {
+    setMenuOpen(false);
+  });
+});
+
+
+/* --------------------------------------------------------------------------
+   3. SCROLL ROWS (Events, News)
+   Each .carousel has a sideways-scrolling .carousel-track and two arrow
+   buttons. The arrows scroll the row by almost one screen-width and are
+   disabled (hidden) when there is nothing more to show in that direction.
+   -------------------------------------------------------------------------- */
+
+document.querySelectorAll('.carousel').forEach(function (carousel) {
+  const track = carousel.querySelector('.carousel-track');
+  const prevButton = carousel.querySelector('.carousel-prev');
+  const nextButton = carousel.querySelector('.carousel-next');
+
+  function updateArrows() {
+    const maxScroll = track.scrollWidth - track.clientWidth;
+
+    // Arrows are shown only when there is something to scroll
+    carousel.classList.toggle('is-scrollable', maxScroll > 1);
+
+    // "All ..." link: only useful when some items are out of view (or to collapse again)
+    const expandLink = document.querySelector('.expand-link[data-expand="' + carousel.id + '"]');
+    if (expandLink) {
+      expandLink.parentElement.hidden = !(maxScroll > 1 || carousel.classList.contains('is-expanded'));
+    }
+    prevButton.disabled = track.scrollLeft <= 1;
+    nextButton.disabled = track.scrollLeft >= maxScroll - 1;
+  }
+
+  function scrollByPage(direction) {
+    track.scrollBy({ left: direction * track.clientWidth * 0.9, behavior: 'smooth' });
+  }
+
+  prevButton.addEventListener('click', function () { scrollByPage(-1); });
+  nextButton.addEventListener('click', function () { scrollByPage(1); });
+  track.addEventListener('scroll', updateArrows, { passive: true });
+
+  // Keyboard: left / right arrow keys scroll the focused row
+  track.addEventListener('keydown', function (event) {
+    if (event.key === 'ArrowRight') { scrollByPage(1); event.preventDefault(); }
+    if (event.key === 'ArrowLeft') { scrollByPage(-1); event.preventDefault(); }
+  });
+
+  // Re-check when the size changes (window resize, or the Past tab being shown)
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(updateArrows).observe(track);
+  } else {
+    window.addEventListener('resize', updateArrows);
+  }
+  updateArrows();
+});
+
+(function () {
+  function showAlt(img) {
+    if (img.dataset.altShown) return;
+    img.dataset.altShown = "1";
+    var box = document.createElement("div");
+    box.className = "avatar avatar-fallback";
+    box.setAttribute("role", "img");
+    box.setAttribute("aria-label", img.alt);
+    var text = document.createElement("span");
+    text.textContent = img.alt;
+    box.appendChild(text);
+    img.replaceWith(box);
+  }
+  document.querySelectorAll("img.avatar").forEach(function (img) {
+    if (img.complete && img.naturalWidth === 0) showAlt(img);
+    else img.addEventListener("error", function () { showAlt(img); });
+  });
 })();

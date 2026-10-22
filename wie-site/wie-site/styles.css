@@ -332,6 +332,178 @@ section.section-tinted {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
 
+/* Horizontal scroll row (Events, News) with Netflix-style arrows.
+   .carousel-track scrolls sideways, the arrows are added by script.js logic. */
+.carousel {
+  position: relative;
+}
+
+.carousel[hidden] {
+  display: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 8px;          /* room for focus outlines */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;         /* hide the scrollbar (Firefox) */
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;                 /* hide the scrollbar (Chrome, Safari) */
+}
+
+.carousel-track > .card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
+
+.carousel-track .card h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.carousel-track .card > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Pop-up with the full article */
+.article-dialog {
+  width: min(720px, calc(100% - 32px));
+  max-height: 85vh;
+  padding: 32px 28px 28px;
+  border: 0;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
+  overflow-y: auto;
+}
+
+.article-dialog::backdrop {
+  background: rgba(0, 0, 0, .55);
+}
+
+.article-dialog h3 {
+  margin: 6px 0 16px;
+}
+
+.article-body p {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.article-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: none;
+  color: var(--purple);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+body:has(.article-dialog[open]) {
+  overflow: hidden;   /* page behind the pop-up does not scroll */
+}
+
+/* Message shown when a list has no items */
+.empty-message {
+  flex: 1;
+  margin: 0;
+  padding: 24px 0;
+  color: var(--gray);
+  font-size: 16px;
+}
+
+/* "All news": the row turns into a grid that shows every item (see script.js) */
+.carousel.is-expanded .carousel-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  overflow: visible;
+}
+
+.carousel.is-expanded .carousel-btn {
+  display: none;
+}
+
+.carousel.is-expanded .carousel-track > .card {
+  flex: none;
+}
+
+/* Back / forward arrows, centered vertically over the edges of the row */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  margin-right: -23px;
+  margin-left: -23px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  opacity: 1;            /* always visible, no hover needed */
+  transition: opacity .2s, background .2s;
+}
+
+.carousel-prev { left: -14px; }
+.carousel-next { right: -14px; }
+
+.carousel-btn svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.carousel-btn:hover {
+  background: var(--blue);
+}
+
+/* Everything fits on screen: no arrows (script.js adds .is-scrollable when needed) */
+.carousel:not(.is-scrollable) .carousel-btn {
+  display: none;
+}
+
+/* Nothing more to scroll in that direction: the arrow fades out */
+.carousel-btn:disabled {
+  opacity: .3;
+  cursor: default;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .carousel-track > .card { flex-basis: 78%; }
+  .carousel-btn { width: 38px; height: 38px; }
+  .carousel-prev { left: -6px; }
+  .carousel-next { right: -6px; }
+}
+
 .card {
   background: #fff;
   border: 1px solid var(--line);
@@ -411,7 +583,7 @@ section.section-tinted {
 
 /* ==========================================================================
    7. NEWS
-   Uses only the shared .grid and .card styles (section 5).
+   Uses the shared .carousel and .card styles (section 5).
    ========================================================================== */
 
 
@@ -1374,3 +1546,42 @@ footer {
     transition: none;
   }
 }
+
+/* ==========================================================================
+   EMAIL ICON MENU (built by script.js)
+   ========================================================================== */
+
+.email-menu {
+  position: absolute;
+  z-index: 50;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .35);
+}
+
+.email-menu[hidden] {
+  display: none;
+}
+
+.email-menu a,
+.email-menu button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--purple);
+  font: 600 15px "Open Sans", sans-serif;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.email-menu a:hover,
+.email-menu button:hover {
+  background: var(--tint);
+}
+ 
