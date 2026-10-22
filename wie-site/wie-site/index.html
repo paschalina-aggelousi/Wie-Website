@@ -18,6 +18,9 @@
   <!-- Bitcount Ink: used for the "innovate. lead. inspire." tagline in the footer -->
   <link href="https://fonts.googleapis.com/css2?family=Bitcount+Ink:wght@100..900&display=swap" rel="stylesheet">
 
+  <!-- Marks the page as "JavaScript on" before it is painted (used by the sub-team mind map) -->
+  <script>document.documentElement.classList.add('js');</script>
+
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -93,7 +96,7 @@
       </div>
 
       <!-- Upcoming events -->
-      <div class="grid" id="events-upcoming">
+      <div class="grid scroll-row" id="events-upcoming" tabindex="0" aria-label="Upcoming events, scroll horizontally">
         <article class="card">
           <span class="card-date">00 Month 2026 · 18:00</span>
           <h3>Event title</h3>
@@ -110,7 +113,7 @@
       </div>
 
       <!-- Past events (hidden until the "Past" tab is selected) -->
-      <div class="grid" id="events-past" hidden>
+      <div class="grid scroll-row" id="events-past" tabindex="0" aria-label="Past events, scroll horizontally" hidden>
         <article class="card">
           <div class="placeholder-img" role="img" aria-label="Event photo placeholder"></div>
           <span class="card-date">00 Month 2026</span>
@@ -138,7 +141,7 @@
     <div class="container">
       <h2>News</h2>
 
-      <div class="grid">
+      <div class="grid scroll-row" tabindex="0" aria-label="News, scroll horizontally">
         <article class="card">
           <div class="placeholder-img" role="img" aria-label="Image placeholder"></div>
           <span class="card-date">00 Month 2026</span>
@@ -205,6 +208,57 @@
             <h4 class="feature-title">Leadership Opportunities</h4>
             <p>Empowering members to take initiative, manage projects and refine essential leadership skills.</p>
           </article>
+        </div>
+      </div>
+
+      <!-- Sub-teams: what each team of the group offers -->
+      <div class="about-block">
+        <h3 class="about-heading">Our Sub-teams</h3>
+        <p class="about-intro">Our group is organized into three sub-teams. Click a sub-team to see what it does, or try a bit of everything.</p>
+
+        <div class="mindmap" id="subteam-map">
+          <!-- Curved connector lines are drawn here by enhancements.js -->
+          <svg class="mindmap-lines" aria-hidden="true"></svg>
+
+          <div class="mm-center">IEEE WIE<span>Sub-teams</span></div>
+
+          <div class="mm-branches">
+            <article class="mm-node">
+              <button class="mm-toggle" type="button" id="mm-btn-1" aria-expanded="false" aria-controls="mm-desc-1">
+                <span class="mm-name">Fundraising &amp; HR</span>
+                <span class="mm-icon" aria-hidden="true"></span>
+              </button>
+              <div class="mm-desc" id="mm-desc-1" role="region" aria-labelledby="mm-btn-1">
+                <div class="mm-desc-inner">
+                  <p>Finds sponsors and funding for our events and projects, and takes care of our members: recruitment, onboarding and a welcoming team culture. You build communication, negotiation and people skills.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="mm-node">
+              <button class="mm-toggle" type="button" id="mm-btn-2" aria-expanded="false" aria-controls="mm-desc-2">
+                <span class="mm-name">Graphic Design &amp; Social Media</span>
+                <span class="mm-icon" aria-hidden="true"></span>
+              </button>
+              <div class="mm-desc" id="mm-desc-2" role="region" aria-labelledby="mm-btn-2">
+                <div class="mm-desc-inner">
+                  <p>Creates the visual identity of the group and runs our social media: posters, event visuals, posts and stories. You grow your creativity, design tools and digital storytelling skills.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="mm-node">
+              <button class="mm-toggle" type="button" id="mm-btn-3" aria-expanded="false" aria-controls="mm-desc-3">
+                <span class="mm-name">Project Making</span>
+                <span class="mm-icon" aria-hidden="true"></span>
+              </button>
+              <div class="mm-desc" id="mm-desc-3" role="region" aria-labelledby="mm-btn-3">
+                <div class="mm-desc-inner">
+                  <p>Designs and builds hands-on technical projects and workshops. You get practical experience, work in a team and turn ideas into real prototypes.</p>
+                </div>
+              </div>
+            </article>
+          </div>
         </div>
       </div>
 
@@ -443,6 +497,7 @@
 </footer>
 
 <script src="script.js"></script>
+<script src="enhancements.js"></script>
 </body>
 
 </html>
