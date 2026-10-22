@@ -196,6 +196,8 @@ h3 {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+  width:100%;
   gap: 0 28px;
 }
 
