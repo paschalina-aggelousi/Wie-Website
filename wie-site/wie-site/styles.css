@@ -198,6 +198,8 @@ h3 {
   padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+  width:100%;
   gap: 0 28px;
 }
 
@@ -277,8 +279,8 @@ h3 {
 .hero > .container {
   margin-top: 36px;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 32px;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
   align-items: center;
   width: 100%;              /* needed because .hero is now a flex column */
   flex: 1;                  /* takes all the space left under the header */
