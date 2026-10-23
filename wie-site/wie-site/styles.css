@@ -49,6 +49,8 @@
 }
 
 html {
+  -webkit-text-size-adjust: 100%;   /* phones never inflate the text */
+  text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: 64px;   /* space kept above an anchor when scrolling to it */
 }
@@ -309,6 +311,30 @@ h3 {
   object-fit: contain;
 }
 
+.hero-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  text-align: left;  
+}
+
+/* Illustration above the main title */
+.hero-main .hero-art {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hero-main .hero-art img {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  max-height: 32vh;
+  height: auto;
+  object-fit: contain;
+}
+
 .hero h1 {
   color: var(--purple);
   font-size: clamp(30px, 5vw, 42px);
@@ -354,6 +380,178 @@ section.section-tinted {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* Horizontal scroll row (Events, News) with Netflix-style arrows.
+   .carousel-track scrolls sideways, the arrows are added by script.js logic. */
+.carousel {
+  position: relative;
+}
+
+.carousel[hidden] {
+  display: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 8px;          /* room for focus outlines */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;         /* hide the scrollbar (Firefox) */
+  -ms-overflow-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;                 /* hide the scrollbar (Chrome, Safari) */
+}
+
+.carousel-track > .card {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
+
+.carousel-track .card h3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.carousel-track .card > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Pop-up with the full article */
+.article-dialog {
+  width: min(720px, calc(100% - 32px));
+  max-height: 85vh;
+  padding: 32px 28px 28px;
+  border: 0;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
+  overflow-y: auto;
+}
+
+.article-dialog::backdrop {
+  background: rgba(0, 0, 0, .55);
+}
+
+.article-dialog h3 {
+  margin: 6px 0 16px;
+}
+
+.article-body p {
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.article-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: none;
+  color: var(--purple);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+body:has(.article-dialog[open]) {
+  overflow: hidden;   /* page behind the pop-up does not scroll */
+}
+
+/* Message shown when a list has no items */
+.empty-message {
+  flex: 1;
+  margin: 0;
+  padding: 24px 0;
+  color: var(--gray);
+  font-size: 16px;
+}
+
+/* "All news": the row turns into a grid that shows every item (see script.js) */
+.carousel.is-expanded .carousel-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  overflow: visible;
+}
+
+.carousel.is-expanded .carousel-btn {
+  display: none;
+}
+
+.carousel.is-expanded .carousel-track > .card {
+  flex: none;
+}
+
+/* Back / forward arrows, centered vertically over the edges of the row */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  margin-right: -23px;
+  margin-left: -23px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  opacity: 1;            /* always visible, no hover needed */
+  transition: opacity .2s, background .2s;
+}
+
+.carousel-prev { left: -14px; }
+.carousel-next { right: -14px; }
+
+.carousel-btn svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.carousel-btn:hover {
+  background: var(--blue);
+}
+
+/* Everything fits on screen: no arrows (script.js adds .is-scrollable when needed) */
+.carousel:not(.is-scrollable) .carousel-btn {
+  display: none;
+}
+
+/* Nothing more to scroll in that direction: the arrow fades out */
+.carousel-btn:disabled {
+  opacity: .3;
+  cursor: default;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .carousel-track > .card { flex-basis: 78%; }
+  .carousel-btn { width: 38px; height: 38px; }
+  .carousel-prev { left: -6px; }
+  .carousel-next { right: -6px; }
 }
 
 .card {
@@ -435,7 +633,7 @@ section.section-tinted {
 
 /* ==========================================================================
    7. NEWS
-   Uses only the shared .grid and .card styles (section 5).
+   Uses the shared .carousel and .card styles (section 5).
    ========================================================================== */
 
 
@@ -872,6 +1070,371 @@ footer {
 }
 
 /* ==========================================================================
+   Horizontal carousels (Events + News)  -  Netflix style
+   The cards sit in one row. There is no scrollbar: the arrows on the sides
+   move the row back/forward (the arrows are added by enhancements.js).
+   Swiping, trackpad and keyboard arrows still work.
+   ========================================================================== */
+
+.carousel {
+  position: relative;
+}
+
+.grid.scroll-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-padding-left: 2px;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;                /* Firefox: no scrollbar */
+  -ms-overflow-style: none;
+}
+
+.grid.scroll-row::-webkit-scrollbar {
+  display: none;                        /* Chrome / Safari / Edge: no scrollbar */
+}
+
+/* The [hidden] attribute must still win over display: flex (Past events tab) */
+.grid.scroll-row[hidden] {
+  display: none;
+}
+
+.grid.scroll-row > .card {
+  flex: 0 0 min(300px, 82%);
+  scroll-snap-align: start;
+}
+
+/* Arrow buttons: full-height purple fades on the left / right edge */
+.carousel-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  background: rgba(119, 37, 131, 0.78);   /* translucent purple bar, like Netflix's dark one */
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.carousel-btn:hover {
+  background: rgba(119, 37, 131, 0.95);
+}
+
+.carousel-btn--prev {
+  left: 0;
+}
+
+.carousel-btn--next {
+  right: 0;
+}
+
+.carousel-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.15s ease;
+}
+
+/* Like Netflix: the arrows appear when the pointer is over the row */
+.carousel:hover .carousel-btn,
+.carousel:focus-within .carousel-btn {
+  opacity: 1;
+}
+
+.carousel-btn:hover svg {
+  transform: scale(1.3);
+}
+
+/* Touch screens have no hover, so the arrows are always visible (a bit narrower) */
+@media (hover: none) {
+  .carousel-btn {
+    opacity: 1;
+    width: 34px;
+  }
+}
+
+
+/* ==========================================================================
+   Sub-teams  -  mind map (About us)
+   Center node on the left, one branch per sub-team on the right.
+   Click a branch: its box grows and shows the description.
+   The curved lines are drawn by enhancements.js (and follow the boxes).
+   Without JavaScript every description simply stays visible.
+   ========================================================================== */
+
+.mindmap {
+  position: relative;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  column-gap: clamp(60px, 8vw, 120px);
+  align-items: center;
+  padding: 8px 0;
+}
+
+.mindmap-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mindmap-lines path {
+  fill: none;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+/* Center node */
+.mm-center {
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, var(--purple), #a45bb0);
+  box-shadow: 0 0 0 10px var(--tint), 0 8px 24px rgba(119, 37, 131, 0.25);
+}
+
+.mm-center span {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.92;
+}
+
+/* Branches */
+.mm-branches {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.mm-node {
+  --accent: var(--purple);
+  width: min(100%, 480px);
+  background: #fff;
+  border: 2px solid var(--accent);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(43, 43, 46, 0.06);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.mm-node:nth-child(2) { --accent: var(--blue); }
+.mm-node:nth-child(3) { --accent: var(--green); }
+
+.mm-node:hover,
+.mm-node.is-open {
+  box-shadow: 0 8px 22px rgba(119, 37, 131, 0.16);
+}
+
+.mm-node:hover {
+  transform: translateX(4px);
+}
+
+.mm-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 0;
+  background: none;
+  color: var(--purple);
+  font: 600 18px/1.25 "Open Sans", Calibri, Arial, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Name: the underline grows from the left on hover / focus */
+.mm-name {
+  background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 3px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 0.3s ease;
+}
+
+.mm-toggle:hover .mm-name,
+.mm-toggle:focus-visible .mm-name {
+  background-size: 100% 3px;
+}
+
+/* "+" that turns into "–" when open */
+.mm-icon {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.3s ease;
+}
+
+.mm-icon::before,
+.mm-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 2.5px;
+  margin: -1.25px 0 0 -6px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform 0.3s ease;
+}
+
+.mm-icon::after {
+  transform: rotate(90deg);
+}
+
+.mm-node.is-open .mm-icon::after {
+  transform: rotate(0deg);
+}
+
+.mm-toggle:hover .mm-icon {
+  transform: scale(1.12);
+}
+
+/* Description: collapsed to 0 height until the node is open (only when JS runs) */
+.mm-desc-inner p {
+  margin: 0;
+  padding: 0 20px 18px;
+  font-size: 15px;
+  color: #4a4a4f;
+}
+
+.js .mm-desc {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.js .mm-node.is-open .mm-desc {
+  grid-template-rows: 1fr;
+}
+
+.js .mm-desc-inner {
+  overflow: hidden;
+  min-height: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 0.35s;
+}
+
+.js .mm-node.is-open .mm-desc-inner {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* Mobile: center on top, branches underneath, joined by a line on the left */
+@media (max-width: 760px) {
+  .mindmap {
+    grid-template-columns: 1fr;
+    row-gap: 30px;
+    justify-items: start;
+  }
+
+  .mm-center {
+    width: 120px;
+    height: 120px;
+    font-size: 17px;
+    justify-self: start;
+    box-shadow: 0 0 0 7px var(--tint), 0 6px 18px rgba(119, 37, 131, 0.25);
+  }
+
+  .mm-center span {
+    font-size: 12px;
+  }
+
+  .mm-branches {
+    width: 100%;
+    padding-left: 84px;
+  }
+
+  .mm-node {
+    width: 100%;
+  }
+
+  .mm-toggle {
+    font-size: 16px;
+    padding: 14px 16px;
+  }
+
+  .mm-desc-inner p {
+    padding: 0 16px 16px;
+  }
+}
+
+
+/* ==========================================================================
+   Screen sizes (laptops and desktops)
+   The text sizes stay the same on every screen. Only the width of the
+   content column changes, and on short laptop screens the hero is made a
+   little more compact so it still fits in one screen.
+   ========================================================================== */
+
+@media (min-width: 1200px) {
+  .container { max-width: 1200px; }
+  .grid.scroll-row > .card { flex-basis: 320px; }
+}
+
+/* Laptops with a low screen (e.g. 1366x768, 1280x720) */
+@media (min-width: 761px) and (max-height: 800px) {
+  .hero { padding-bottom: 56px; }
+  .hero > .container { margin-top: 16px; }
+  .site-header .logo-wie,
+  .site-header .logo-uom { width: 80px; height: 80px; }
+  .hero-main .hero-art { margin-bottom: 12px; }
+  .hero-main .hero-art img { max-width: 240px; max-height: 26vh; }
+  .hero h1 { margin-bottom: 20px; }
+}
+
+/* Phones: footer logos wrap instead of pushing the page wider than the screen */
+@media (max-width: 760px) {
+  .footer-logos { flex-wrap: wrap; gap: 16px 22px; }
+  .footer-logos .logo-ieee { width: 110px; }
+}
+
+/* Tablets / small laptops */
+@media (min-width: 761px) and (max-width: 1000px) {
+  .hero > .container { gap: 24px; }
+  .hero .hero-text { font-size: 17px; }
+  .nav-menu { gap: 0 16px; }
+}
+
+
+/* ==========================================================================
    12. MOBILE (max-width: 760px)
    Kept at the end of the file so these rules override the ones above.
    ========================================================================== */
@@ -1040,3 +1603,42 @@ footer {
     transition: none;
   }
 }
+
+/* ==========================================================================
+   EMAIL ICON MENU (built by script.js)
+   ========================================================================== */
+
+.email-menu {
+  position: absolute;
+  z-index: 50;
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .35);
+}
+
+.email-menu[hidden] {
+  display: none;
+}
+
+.email-menu a,
+.email-menu button {
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--purple);
+  font: 600 15px "Open Sans", sans-serif;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.email-menu a:hover,
+.email-menu button:hover {
+  background: var(--tint);
+}
+ 
