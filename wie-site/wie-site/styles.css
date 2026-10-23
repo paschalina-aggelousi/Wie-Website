@@ -27,7 +27,7 @@
 :root {
   --purple: #772583;   /* primary */
   --blue:   #00629B;   /* accent */
-  --green:  #78BE20;   /* accent */
+  --lightpurple:  #a441b3;   /* accent */
   --gray:   #75787B;   /* secondary text */
   --ink:    #2b2b2e;   /* body text */
   --tint:   #F1E9F3;   /* light purple background */
@@ -112,7 +112,7 @@ h3 {
   display: inline-block;
   padding: 14px 26px;
   text-decoration: none;
-  background: var(--green);
+  background: var(--blue);
   color: #1c2b06;
   border: 0;
   font: 700 16px "Open Sans", sans-serif;
@@ -329,7 +329,7 @@ h3 {
 .hero-main .hero-art img {
   display: block;
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
   max-height: 32vh;
   height: auto;
   object-fit: contain;
@@ -643,7 +643,7 @@ body:has(.article-dialog[open]) {
 
 /* Block titles inside About us: What We Do / Why Join Us? / Our Vision */
 .about-block {
-  margin-top: 44px;
+  margin-top: 64px;
 }
 
 .about-block:first-of-type {
@@ -663,10 +663,14 @@ body:has(.article-dialog[open]) {
 }
 
 .about-heading-icon svg {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   flex: none;
-  fill: currentColor;   /* same purple as the heading text */
+  fill: none;
+  stroke: currentColor;   /* same purple as the heading text */
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .about-intro {
@@ -677,7 +681,7 @@ body:has(.article-dialog[open]) {
 /* "What We Do": four illustrated cards with a purple top edge */
 .feature-grid {
   display: grid;
-  gap: 20px;
+  gap: 30px;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
@@ -688,7 +692,7 @@ body:has(.article-dialog[open]) {
   border-bottom: 2px solid var(--purple);
   border-left: 2px solid var(--purple);
   border-right: 2px solid var(--purple);
-  padding: 22px;
+  padding: 20px;
 }
 
 /* Illustration at the top of each card.
@@ -764,7 +768,7 @@ body:has(.article-dialog[open]) {
 
 /* Team members */
 .team {
-  margin-top: 44px;
+  margin-top: 64px;
 }
 
 .team-title {
@@ -1170,254 +1174,296 @@ footer {
 
 
 /* ==========================================================================
-   Sub-teams  -  mind map (About us)
-   Center node on the left, one branch per sub-team on the right.
-   Click a branch: its box grows and shows the description.
-   The curved lines are drawn by enhancements.js (and follow the boxes).
-   Without JavaScript every description simply stays visible.
+   Subteams  -  timeline (About us)
+   A vertical line in the middle, a round icon on it for every subteam and
+   the cards alternating left / right (like the news timeline).
    ========================================================================== */
 
-.mindmap {
+.timeline {
   position: relative;
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  column-gap: clamp(60px, 8vw, 120px);
-  align-items: center;
-  padding: 8px 0;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 4px 0;
 }
 
-.mindmap-lines {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.mindmap-lines path {
-  fill: none;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-}
-
-/* Center node */
-.mm-center {
-  position: relative;
-  z-index: 1;
-  justify-self: center;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #fff;
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 1.15;
-  background: linear-gradient(135deg, var(--purple), #a45bb0);
-  box-shadow: 0 0 0 10px var(--tint), 0 8px 24px rgba(119, 37, 131, 0.25);
-}
-
-.mm-center span {
-  margin-top: 4px;
-  font-size: 14px;
-  font-weight: 400;
-  opacity: 0.92;
-}
-
-/* Branches */
-.mm-branches {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 18px;
-}
-
-.mm-node {
-  --accent: var(--purple);
-  width: min(100%, 480px);
-  background: #fff;
-  border: 2px solid var(--accent);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(43, 43, 46, 0.06);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.mm-node:nth-child(2) { --accent: var(--blue); }
-.mm-node:nth-child(3) { --accent: var(--green); }
-
-.mm-node:hover,
-.mm-node.is-open {
-  box-shadow: 0 8px 22px rgba(119, 37, 131, 0.16);
-}
-
-.mm-node:hover {
-  transform: translateX(4px);
-}
-
-.mm-toggle {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 20px;
-  border: 0;
-  background: none;
-  color: var(--purple);
-  font: 600 18px/1.25 "Open Sans", Calibri, Arial, sans-serif;
-  text-align: left;
-  cursor: pointer;
-}
-
-/* Name: the underline grows from the left on hover / focus */
-.mm-name {
-  background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 3px no-repeat;
-  padding-bottom: 3px;
-  transition: background-size 0.3s ease;
-}
-
-.mm-toggle:hover .mm-name,
-.mm-toggle:focus-visible .mm-name {
-  background-size: 100% 3px;
-}
-
-/* "+" that turns into "–" when open */
-.mm-icon {
-  position: relative;
-  flex: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--accent);
-  transition: transform 0.3s ease;
-}
-
-.mm-icon::before,
-.mm-icon::after {
+/* The vertical line */
+.timeline::before {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 0;
+  bottom: 0;
   left: 50%;
-  width: 12px;
-  height: 2.5px;
-  margin: -1.25px 0 0 -6px;
-  background: #fff;
+  width: 4px;
+  margin-left: -2px;
   border-radius: 2px;
-  transition: transform 0.3s ease;
+  background: #d3e0ea;
 }
 
-.mm-icon::after {
-  transform: rotate(90deg);
+.tl-item {
+  --tl-accent: var(--purple);
+  position: relative;
+  width: 50%;
+  padding-right: 56px;          /* space for the icon and the arrow */
+  margin-bottom: 40px;
 }
 
-.mm-node.is-open .mm-icon::after {
-  transform: rotate(0deg);
+.tl-item:nth-child(2) { --tl-accent: var(--blue); }
+.tl-item:nth-child(3) { --tl-accent: var(--lightpurple); }
+
+.tl-item:last-child {
+  margin-bottom: 0;
 }
 
-.mm-toggle:hover .mm-icon {
-  transform: scale(1.12);
+/* Every second card goes to the right side */
+.tl-item:nth-child(even) {
+  margin-left: 50%;
+  padding-right: 0;
+  padding-left: 56px;
 }
 
-/* Description: collapsed to 0 height until the node is open (only when JS runs) */
-.mm-desc-inner p {
+/* Round icon, centered on the line */
+.tl-icon {
+  position: absolute;
+  top: 0;
+  right: -24px;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--tl-accent);
+  box-shadow: 0 0 0 5px #fff, 0 2px 10px rgba(0, 0, 0, 0.22);
+}
+
+.tl-item:nth-child(even) .tl-icon {
+  right: auto;
+  left: -24px;
+}
+
+.tl-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: #fff;
+}
+
+/* The card */
+.tl-card {
+  position: relative;
+  padding: 24px 28px 26px;
+  background: #f0f0f0;
+  border-bottom: 3px solid #c9c9c9;
+  box-shadow: 0 2px 8px rgba(43, 43, 46, 0.08);
+}
+
+/* Little arrow pointing to the line */
+.tl-card::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid #f0f0f0;
+}
+
+.tl-item:nth-child(even) .tl-card::after {
+  right: auto;
+  left: -10px;
+  border-left: 0;
+  border-right: 10px solid #f0f0f0;
+}
+
+.tl-card h4 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+.tl-card p {
   margin: 0;
-  padding: 0 20px 18px;
   font-size: 15px;
   color: #4a4a4f;
 }
 
-.js .mm-desc {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease;
-}
-
-.js .mm-node.is-open .mm-desc {
-  grid-template-rows: 1fr;
-}
-
-.js .mm-desc-inner {
-  overflow: hidden;
-  min-height: 0;
-  visibility: hidden;
-  transition: visibility 0s linear 0.35s;
-}
-
-.js .mm-node.is-open .mm-desc-inner {
-  visibility: visible;
-  transition-delay: 0s;
-}
-
-/* Mobile: center on top, branches underneath, joined by a line on the left */
+/* Mobile: line on the left, all cards on the right of it */
 @media (max-width: 760px) {
-  .mindmap {
-    grid-template-columns: 1fr;
-    row-gap: 30px;
-    justify-items: start;
+  .timeline::before {
+    left: 24px;
   }
 
-  .mm-center {
-    width: 120px;
-    height: 120px;
-    font-size: 17px;
-    justify-self: start;
-    box-shadow: 0 0 0 7px var(--tint), 0 6px 18px rgba(119, 37, 131, 0.25);
-  }
-
-  .mm-center span {
-    font-size: 12px;
-  }
-
-  .mm-branches {
+  .tl-item,
+  .tl-item:nth-child(even) {
     width: 100%;
-    padding-left: 84px;
+    margin-left: 0;
+    padding-left: 68px;
+    padding-right: 0;
   }
 
-  .mm-node {
-    width: 100%;
+  .tl-icon,
+  .tl-item:nth-child(even) .tl-icon {
+    left: 0;
+    right: auto;
   }
 
-  .mm-toggle {
-    font-size: 16px;
-    padding: 14px 16px;
-  }
-
-  .mm-desc-inner p {
-    padding: 0 16px 16px;
+  .tl-item .tl-card::after,
+  .tl-item:nth-child(even) .tl-card::after {
+    right: auto;
+    left: -10px;
+    border-left: 0;
+    border-right: 10px solid #f0f0f0;
   }
 }
 
 
 /* ==========================================================================
-   Screen sizes (laptops and desktops)
-   The text sizes stay the same on every screen. Only the width of the
-   content column changes, and on short laptop screens the hero is made a
-   little more compact so it still fits in one screen.
+   Screen sizes (responsive scaling)
+
+   --u is the "size unit". It is 1px on phones, tablets and laptops up to
+   1366px wide, and grows smoothly on bigger screens (about 1.2px at 1920px,
+   1.5px at 2560px). Every size written as calc(N * var(--u)) scales with it,
+   so text, images, logos and spacing grow together on big screens.
+   Only the screens wider than 760px are touched here; phones keep the
+   rules of the MOBILE section.
    ========================================================================== */
 
-@media (min-width: 1200px) {
-  .container { max-width: 1200px; }
-  .grid.scroll-row > .card { flex-basis: 320px; }
+:root {
+  --u: clamp(1px, calc(0.45px + 100vw / 2480), 2.2px);
 }
 
-/* Laptops with a low screen (e.g. 1366x768, 1280x720) */
-@media (min-width: 761px) and (max-height: 800px) {
-  .hero { padding-bottom: 56px; }
-  .hero > .container { margin-top: 16px; }
+/* Team: centered rows, so 3 or 4 people always sit in the middle (all screens) */
+.team-title {
+  text-align: start;
+}
+
+.team-subtitle {
+  text-align: center;
+}
+
+.grid.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 28px 16px;
+}
+
+.team-grid .person {
+  flex: 0 1 150px;
+  text-align: center;
+}
+
+.person .avatar {
+  margin: 0 auto 12px;
+}
+
+@media (min-width: 761px) {
+
+  /* Content width: wider than before, so there is less empty space at the sides */
+  .container {
+    max-width: clamp(1080px, 90vw, 2200px);
+    padding: 0 calc(20 * var(--u));
+  }
+
+  /* Base text */
+  body { font-size: calc(17 * var(--u)); }
+  h2 { font-size: clamp(30px, 5vw, calc(42 * var(--u))); margin-bottom: calc(28 * var(--u)); }
+  h3 { font-size: calc(20 * var(--u)); }
+  section { padding: calc(72 * var(--u)) 0; }
+
+  .btn { font-size: calc(16 * var(--u)); padding: calc(14 * var(--u)) calc(26 * var(--u)); }
+
+  /* Header: bigger logos */
+  .site-header { gap: calc(18 * var(--u)); padding: calc(14 * var(--u)) calc(20 * var(--u)); }
   .site-header .logo-wie,
-  .site-header .logo-uom { width: 80px; height: 80px; }
-  .hero-main .hero-art { margin-bottom: 12px; }
-  .hero-main .hero-art img { max-width: 240px; max-height: 26vh; }
-  .hero h1 { margin-bottom: 20px; }
+  .site-header .logo-uom { width: calc(100 * var(--u)); height: calc(100 * var(--u)); }
+  .site-header .brand-name { font-size: calc(20 * var(--u)); }
+  .site-header .brand-name span { font-size: calc(18 * var(--u)); }
+  .nav-menu a { font-size: calc(15 * var(--u)); padding: calc(14 * var(--u)) 0; }
+
+  /* Hero: bigger picture and text */
+  .hero { padding-bottom: calc(88 * var(--u)); }
+  .hero > .container { margin-top: calc(36 * var(--u)); gap: calc(40 * var(--u)); }
+  .hero h1 { font-size: clamp(30px, 5vw, calc(42 * var(--u))); margin-bottom: calc(28 * var(--u)); }
+  .hero .hero-text { font-size: calc(19 * var(--u)); margin-right: clamp(0px, 4vw, calc(50 * var(--u))); }
+  .hero-main .hero-art { margin-bottom: calc(20 * var(--u)); }
+  .hero-main .hero-art img { max-width: calc(640 * var(--u)); max-height: 52vh; }
+
+  /* Cards (Events, News) */
+  .carousel-track { gap: calc(20 * var(--u)); }
+  .carousel-track > .card { flex-basis: calc(300 * var(--u)); }
+  .card { padding: calc(22 * var(--u)); gap: calc(10 * var(--u)); }
+  .card p,
+  .card-date,
+  .card .card-link { font-size: calc(15 * var(--u)); }
+  .placeholder-img {
+    height: calc(130 * var(--u));
+    margin: calc(-22 * var(--u)) calc(-22 * var(--u)) calc(6 * var(--u));
+  }
+
+  /* About us */
+  .about-block { margin-top: calc(88 * var(--u)); }
+  .about-heading,
+  .team-title { font-size: clamp(24px, 3.5vw, calc(30 * var(--u))); }
+  .about-heading-icon svg { width: calc(44 * var(--u)); height: calc(44 * var(--u)); }
+  .feature-grid { gap: calc(20 * var(--u)); }
+  .feature { padding: calc(22 * var(--u)); }
+  .feature-icon { height: calc(150 * var(--u)); }
+  .feature-title,
+  .perk-title { font-size: calc(18 * var(--u)); }
+  .feature p,
+  .perk p { font-size: calc(15 * var(--u)); }
+  .why-panel { padding: calc(32 * var(--u)); }
+  .perks { gap: calc(24 * var(--u)); }
+  .perk { padding: calc(14 * var(--u)); }
+  .vision { font-size: clamp(20px, 3vw, calc(26 * var(--u))); }
+
+  /* Team */
+  .team { margin-top: calc(88 * var(--u)); }
+  .team-subtitle { font-size: calc(20 * var(--u)); margin: calc(28 * var(--u)) 0 calc(16 * var(--u)); }
+  .grid.team-grid { gap: calc(36 * var(--u)) calc(56 * var(--u)); }
+  .team-grid .person { flex-basis: calc(230 * var(--u)); }
+  .person .avatar { width: calc(150 * var(--u)); height: calc(150 * var(--u)); }
+  .person b { font-size: calc(18 * var(--u)); }
+  .person span { font-size: calc(16 * var(--u)); }
+  .linkedin-link { width: calc(26 * var(--u)); height: calc(26 * var(--u)); }
+  .linkedin-link svg { width: calc(18 * var(--u)); height: calc(18 * var(--u)); }
+
+  /* Join us */
+  .join-grid { gap: calc(40 * var(--u)); }
+  .google-form-container { max-width: calc(640 * var(--u)); }
+  .google-form-container iframe { height: clamp(480px, 70vh, calc(620 * var(--u))); }
+
+  /* FAQs */
+  details { max-width: calc(900 * var(--u)); padding: calc(18 * var(--u)) 0; }
+  summary { font-size: calc(18 * var(--u)); }
+  summary::after { font-size: calc(26 * var(--u)); }
+
+  /* Footer */
+  footer { padding: calc(44 * var(--u)) 0; }
+  .footer-tagline { font-size: clamp(26px, 6vw, calc(46 * var(--u))); }
+  .footer-logos { gap: calc(28 * var(--u)); }
+  .footer-logos .logo-wie { width: calc(110 * var(--u)); }
+  .footer-logos .logo-uom { width: calc(76 * var(--u)); padding: calc(6 * var(--u)); }
+  .footer-logos .logo-ieee { width: calc(150 * var(--u)); }
+  .footer-social-title { font-size: calc(18 * var(--u)); }
+  .social-links { gap: calc(40 * var(--u)); }
+  .social-links a { width: calc(46 * var(--u)); height: calc(46 * var(--u)); }
+  .social-links svg { width: calc(22 * var(--u)); height: calc(22 * var(--u)); }
+  .footer-note { font-size: calc(14 * var(--u)); }
+  .copyright { font-size: calc(12 * var(--u)); }
+}
+
+/* Laptops with a low screen (e.g. 1366x768): less vertical space, same sizes */
+@media (min-width: 761px) and (max-height: 800px) {
+  .hero { padding-bottom: calc(48 * var(--u)); }
+  .hero > .container { margin-top: calc(12 * var(--u)); }
+  .hero-main .hero-art img { max-height: 42vh; }
+  .hero h1 { margin-bottom: calc(18 * var(--u)); }
 }
 
 /* Phones: footer logos wrap instead of pushing the page wider than the screen */
@@ -1432,7 +1478,6 @@ footer {
   .hero .hero-text { font-size: 17px; }
   .nav-menu { gap: 0 16px; }
 }
-
 
 /* ==========================================================================
    12. MOBILE (max-width: 760px)

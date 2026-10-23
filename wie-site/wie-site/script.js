@@ -277,3 +277,25 @@ document.querySelectorAll('.carousel').forEach(function (carousel) {
     else img.addEventListener("error", function () { showAlt(img); });
   });
 })();
+
+/* --------------------------------------------------------------------------
+   4. SUBTEAMS MIND MAP
+   Clicking the name of a subteam opens or closes its description.
+   The "is-collapsible" class makes the descriptions start closed (without
+   JavaScript they all stay visible). Each box opens on its own.
+   -------------------------------------------------------------------------- */
+
+(function () {
+  const map = document.getElementById('subteams-map');
+  if (!map) return;
+
+  map.classList.add('is-collapsible');
+
+  map.querySelectorAll('.sm-toggle').forEach(function (button) {
+    button.addEventListener('click', function () {
+      const node = button.closest('.sm-node');
+      const isOpen = node.classList.toggle('is-open');
+      button.setAttribute('aria-expanded', isOpen);
+    });
+  });
+})();
