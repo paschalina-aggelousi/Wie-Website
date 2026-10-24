@@ -1687,3 +1687,55 @@ footer {
   background: var(--tint);
 }
  
+/* ==========================================================================
+   SCROLL ANIMATIONS (set up by script.js)
+   Everything is scoped under .has-reveal, which script.js adds only when the
+   animations can run, so without JavaScript nothing is hidden.
+   ========================================================================== */
+
+/* Elements that slide in from the side must not create a sideways scrollbar */
+body {
+  overflow-x: clip;
+}
+
+.has-reveal .reveal {
+  opacity: 0;
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.has-reveal .reveal[data-reveal="up"]    { transform: translateY(28px); }
+.has-reveal .reveal[data-reveal="left"]  { transform: translateX(-36px); }
+.has-reveal .reveal[data-reveal="right"] { transform: translateX(36px); }
+.has-reveal .reveal[data-reveal="zoom"]  { transform: translateY(18px) scale(0.94); }
+
+.has-reveal .reveal[data-reveal="pop"] {
+  transform: scale(0.5);
+  transition-duration: 0.6s, 0.6s;
+  transition-timing-function: ease, cubic-bezier(0.34, 1.56, 0.64, 1);   /* small bounce */
+}
+
+/* Mobile: the timeline cards are all on one side, so they rise instead of sliding */
+@media (max-width: 760px) {
+  .has-reveal .tl-item.reveal[data-reveal="left"],
+  .has-reveal .tl-item.reveal[data-reveal="right"] {
+    transform: translateY(28px);
+  }
+}
+
+/* Final state (must stay after the rules above) */
+.has-reveal .reveal[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .has-reveal .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -5,6 +5,78 @@
    1. Events tabs (Upcoming / Past)
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   SCROLL ANIMATIONS
+   Elements fade / slide in when they come into view while the visitor scrolls.
+   The list below says which elements move and how:
+     up    = rises a little      left / right = slides in from the side
+     zoom  = rises and grows     pop = small bounce (icons)
+   Elements of the same row (e.g. the cards) appear one after the other.
+   Nothing here needs changes in index.html. If JavaScript fails or the visitor
+   prefers reduced motion, everything is simply shown.
+   -------------------------------------------------------------------------- */
+
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const groups = [
+    ['section h2', 'up'],
+    ['.tabs', 'up'],
+    ['.carousel-track > .card', 'up'],
+    ['.empty-message', 'up'],
+    ['.about-heading', 'up'],
+    ['.about-heading-icon svg', 'pop'],
+    ['.about-intro', 'up'],
+    ['.feature', 'up'],
+    ['.tl-item:nth-child(odd)', 'left'],
+    ['.tl-item:nth-child(even)', 'right'],
+    ['.tl-icon', 'pop'],
+    ['.why-panel', 'up'],
+    ['.perk', 'up'],
+    ['.vision', 'left'],
+    ['.team-title', 'up'],
+    ['.team-subtitle', 'up'],
+    ['.person', 'zoom'],
+    ['.join-grid > div:first-child', 'left'],
+    ['.google-form-container', 'right'],
+    ['details', 'up'],
+    ['.footer-inner > *', 'up']
+  ];
+
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.classList.add('is-visible');
+      observer.unobserve(el);
+
+      // When the animation is over, remove the helper classes so that the
+      // element goes back to being completely normal (hover effects etc.)
+      setTimeout(function () {
+        el.classList.remove('reveal', 'is-visible');
+        el.removeAttribute('data-reveal');
+        el.style.removeProperty('--reveal-delay');
+      }, 1600);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+
+  document.documentElement.classList.add('has-reveal');
+
+  groups.forEach(function (group) {
+    const counts = new Map();   // how many elements of this group came before, per parent
+    document.querySelectorAll(group[0]).forEach(function (el) {
+      if (el.classList.contains('reveal')) return;
+      const index = counts.get(el.parentElement) || 0;
+      counts.set(el.parentElement, index + 1);
+
+      el.classList.add('reveal');
+      el.dataset.reveal = group[1];
+      el.style.setProperty('--reveal-delay', Math.min(index, 5) * 90 + 'ms');
+      observer.observe(el);
+    });
+  });
+})();
 
 /* --------------------------------------------------------------------------
    0. "ALL ..." LINKS (All events, All news)
@@ -124,7 +196,6 @@ document.querySelectorAll('.expand-link').forEach(function (link) {
 
     menu.innerHTML =
       '<a href="https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '" target="_blank" rel="noopener">Open in Gmail</a>' +
-      '<a href="https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '" target="_blank" rel="noopener">Open in Outlook</a>' +
       '<a href="mailto:' + address + '">Open email app</a>' +
       '<button type="button">Copy email address</button>';
     menu.querySelector('button').addEventListener('click', function (event) {
